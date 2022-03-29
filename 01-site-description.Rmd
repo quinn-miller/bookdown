@@ -1,0 +1,11 @@
+# Methods
+
+In each watershed we collected precipitation data using a tipping bucket rain gauge and continuous stream depth using either a capacitance rod or pressure transducer. We also measured stream discharge monthly from April to November 2021
+
+## Site Description
+
+Include data and plot from Michigan River
+
+### An unnumbered section {-}
+
+Chapters and sections are numbered by default. To un-number a heading, add a `{.unnumbered}` or the shorter `{-}` at the end of the heading, like in this section.
