@@ -1,6 +1,6 @@
 --- 
-title: "A Minimal Book Example"
-author: "John Doe"
+title: "An Incomplete Accounting of my Master's Thesis Research Thus Far"
+author: "Quinn Miller"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
@@ -8,16 +8,17 @@ bibliography: [book.bib, packages.bib]
 # url: your book url like https://bookdown.org/yihui/bookdown
 # cover-image: path to the social sharing image like images/cover.jpg
 description: |
-  This is a minimal example of using the bookdown package to write a book.
-  The HTML output format for this example is bookdown::gitbook,
-  set in the _output.yml file.
+  I don't know what I'm doing  ¯\_(ツ)_/¯
 link-citations: yes
-github-repo: rstudio/bookdown-demo
+github-repo: quinn-miller/cpf_research
 ---
 
 # About
 
-This is a _sample_ book written in **Markdown**. You can use anything that Pandoc's Markdown supports; for example, a math equation $a^2 + b^2 = c^2$.
+The western United States is seeing an increase in catastrophic wildfire in virtually all climate types and across a broad range of elevations. Many of these fires burn in forested headwaters that communities rely on for water supply, underscoring the need for a greater understanding of how fire changes streamflow timing and magnitude. Though many studies have examined the hydrologic response to fire, the site-specific nature of this type of research has made it difficult to generalize findings. The 2020 Cameron Peak fire in Colorado burned across a broad elevation gradient, making it an ideal case study for examining how the post-fire impact to streamflow generation varies with temperature, aridity, and seasonal snow cover. 
+
+We selected three watersheds—unburned, partially burned, and severely burned—in each of two snow zones: the high-elevation persistent snow zone, and the mid-elevation intermittent snow zone. These watersheds were instrumented to monitor snow accumulation and ablation, rainfall, and stream discharge throughout water year 2021. We compared streamflow responses to rainfall and snowmelt between watersheds to evaluate how burning affected runoff. At high elevations, snowmelt runoff began earlier in the burned watersheds, which experienced greater total flow and lower base flows compared to the unburned watershed. The results were similar for the low elevation sites, though less pronounced for snowmelt runoff. At all elevations, streamflow at the burned sites was more responsive to rainfall, with the low elevation sites exhibiting a much more rapid rise to peak discharge than the high elevation sites. The results demonstrate that the streamflow responses to fire vary between snow zones, indicating a need to account for elevation and snow persistence in post-fire risk assessments.
+
 
 ## Usage 
 
