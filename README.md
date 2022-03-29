@@ -1,14 +1,7 @@
-Welcome! 
+# Repo for Quinn Miller's Master's Thesis Work
 
-This is a minimal example of a book based on R Markdown and **bookdown** (https://github.com/rstudio/bookdown). 
+This is the repository for my thesis work in pursuit of a MS degree in Watershed Science from CSU.The output bookdown document is hosted via github pages here:
 
-This template provides a skeleton file structure that you can edit to create your book. 
+[Bookdown](https://quinn-miller.github.io/cpf_research/)
 
-The contents inside the .Rmd files provide some pointers to help you get started, but feel free to also delete the content in each file and start fresh.
-
-Additional resources:
-
-The **bookdown** book: https://bookdown.org/yihui/bookdown/
-
-The **bookdown** package reference site: https://pkgs.rstudio.com/bookdown
-# bookdown
+My research focuses on streamflow response to fire. The folder raw_sitedata contains stream stage, discharge, rainfall, and snow depth datasets organized by field site name (Bighorn, Bl4, Dry, Michigan Ditch, Montgomery, and Washout).
