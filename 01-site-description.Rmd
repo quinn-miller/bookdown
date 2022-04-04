@@ -1,10 +1,30 @@
 # Methods
 
-In each watershed we collected precipitation data using a tipping bucket rain gauge and continuous stream depth using either a capacitance rod or pressure transducer. We also measured stream discharge monthly from April to November 2021
+In each of our study watersheds we collected precipitation data using a tipping bucket rain gauge and continuous stream depth using either a capacitance rod or pressure transducer. We also measured stream discharge monthly from April to November 2021. When measuring discharge, we recorded stream stage manually in order to calibrate the sensor data (Fig. \@ref(fig:pics))
+
+```{r pics, echo=F, fig.cap="Left: Blue Lake 4 (a tributary to Blue Lake) in June 2021. Right: Staff plate for manual stream stage measurement", fig.show="hold", out.width="50%"}
+knitr::include_graphics("photos/bl4_bridge.jpg")
+knitr::include_graphics("photos/bl4_sp.jpg")
+```
+
 
 ## Site Description
 
-Include data and plot from Michigan River
+For this class report, I will consider two of my field sites-- Blue Lake 4 and Michigan Ditch (Table \@ref(tab:descr-tab)). In chapter 4, I will compare our data collection at the Michigan Ditch tributary to the data collected at the nearby USGS Michigan River gage.
+
+```{r descr-tab, warning=F,message=F, echo=F}
+library(EcoHydRology)
+library(tidyverse)
+library(lubridate)
+library(plotly)
+library(kableExtra)
+
+site_descr<- read_csv("raw_sitedata/site_descr.csv")
+kable(site_descr, caption = "Properties of the watersheds in this study", 
+      booktabs = TRUE, align = "c")
+```
+
+
 
 ### An unnumbered section {-}
 

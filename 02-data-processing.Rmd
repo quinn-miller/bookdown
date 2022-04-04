@@ -1,6 +1,112 @@
 # Data Processing
 
-Show how I go through the data and clean for one site
+The goal is to compare  rainfall and discharge data in order to compute the following metrics: 1) total quantity of response flow, 2) magnitude of peak response discharge, 3) duration of response, 4) lag to peak time (start time of storm to time of peak discharge), and 5) runoff ratio (depth of Q (mm) divided by the depth of rainfall (mm) for the rain storm associated with the runoff response). 
+
+
+## Precipitation
+
+Before starting this analysis, I identified discrete rainfall events from the tipping bucket rain gauge output using the USDA Rainfall Intensity Summarization Tool (RIST; [@ARS2013]). RIST calculated the following metrics for each event: storm duration (hrs), rain depth (mm); maximum intensity (mm h^−1^) over 5-, 15-, 30-, and 60-min intervals; and erosivity. Because the stage data is recorded every 15 minutes, I'm using the start time of the maximum intensity 15 minute interval as the storm start time. The function below formats the RIST output into the form I want.
+
+```{r, include=FALSE}
+library(EcoHydRology)
+library(tidyverse)
+library(lubridate)
+library(plotly)
+library(kableExtra)
+library(ggthemes)
+```
+
+``` {r, show_col_types = FALSE}
+#function to read in rain files
+rain_reader <- function(rain_file){
+  df <-read.delim(rain_file, sep = "", header = TRUE) %>%
+  select(-c(1,3:7))
+}
+
+#function to process the storm output 
+rain_format <- function(rain_file){
+  df<- rain_file %>%
+  select(Max_15_start_date, Max_15_start_time, Precip.in.) %>%
+  rename(date =1, time=2, p_in =3) %>%
+  mutate(datetime = paste(date, time, sep = " ")) %>%
+  filter(!(p_in ==0)) %>%
+  mutate(p_mm = p_in*25.4) %>%
+  mutate(DateTime = mdy_hms(datetime, tz = "GMT"))  
+}
+
+#read in and format michigan ditch and bl4 rain data
+mich_rain <- rain_reader("raw_sitedata/michiganditch/michigan_storm.txt")
+bl4_rain <- rain_reader("raw_sitedata/bl4/bl4_storm.csv")
+
+mich_storm <- rain_format(mich_rain)
+bl4_storm <- rain_format(bl4_rain)
+```
+
+
+## Stream Stage 
+
+Michigan Ditch stream stage was recorded by a pressure transducer that doesn't take into account atmospheric pressure, so the data needs to be corrected using barometic data. The continuous stage data is then calibrated according to the manual stage measurements.
+
+```{r michigan, warning=F, fig.cap='Michigan Ditch stream stage. The red dots indicate manual stage measurements.', out.width='80%', fig.asp=.75, fig.align='center'}
+#read in pt data
+michiganditch_stage_pt=read_csv('raw_sitedata/michiganditch/michiganditch_stage_composite_pt.csv', show_col_types = FALSE) %>%
+  rename(Pw_kPa = 3)
+michiganditch_stage_pt$DateTime = as_datetime(michiganditch_stage_pt$datetime,tz="GMT", format="%m/%d/%Y %H:%M")
+
+#read in baro data
+michiganditch_baro=read_csv('raw_sitedata/michiganditch/michiganditch_baro_composite.csv', show_col_types = FALSE) %>%
+  filter(!is.na(Pressure_kPa)) %>%
+  rename(Pa_kPa = 2)
+michiganditch_baro$DateTime = as_datetime(michiganditch_baro$datetime,tz="GMT", format="%m/%d/%Y %H:%M")
+
+#join pt and baro and convert to stage in cm
+mich_stage = full_join(michiganditch_baro, michiganditch_stage_pt, by="DateTime",all=TRUE) %>%
+  mutate(stage_kPa = Pw_kPa - Pa_kPa) %>%
+  mutate(stage_cm = (stage_kPa*101.97162129779)/10) %>%
+  select(DateTime, stage_cm)
+
+#read in file with manual stage measurements
+discharge_michiganditch=read_csv('raw_sitedata/michiganditch/discharge_michiganditch.csv', show_col_types = FALSE)
+discharge_michiganditch$DateTime = as.POSIXct(discharge_michiganditch$datetime,tz="GMT",format="%m/%d/%Y %H")
+
+#merge the manual discharge measurements with the sensor time series
+michditch_stage=full_join(mich_stage,discharge_michiganditch,by='DateTime') %>%
+  select(1,2,7,9) 
+
+#correct stage based on manual stage measurements
+michditch_stage<-mutate(michditch_stage, stage_corr_cm = stage_cm)
+
+#offset adjust
+michditch_stage$stage_corr_cm=ifelse(michditch_stage$DateTime >ymd_hms('2021-06-21 10:30:00'),
+                                     michditch_stage$stage_corr_cm-1,michditch_stage$stage_corr_cm)
+
+michditch_stage$stage_corr_cm=ifelse(michditch_stage$DateTime>ymd_hms('2021-08-05 11:00:00'),
+                                     michditch_stage$stage_corr_cm-2.3,michditch_stage$stage_corr_cm)
+
+#delete sensor spikes
+michditch_stage <- michditch_stage %>%
+  filter(!(DateTime < ymd_hms("2021-01-10 09:30:00") |
+             DateTime == ymd_hms("2021-06-21 09:45:00") |
+             stage_corr_cm <= 0))
+
+#plot the sensor and manual stage time series
+michiganditch=ggplot()+
+  geom_line(data=michditch_stage,aes(x=DateTime,y=stage_corr_cm))+
+  geom_point(data=michditch_stage, aes(x=DateTime,y=manual_stage_cm),color='red')+
+  labs(x= "Time", y= "Stage (cm)") +
+  theme_bw()
+  
+ggplotly(michiganditch)
+```
+
+
+## Discharge
+
+
+```{r}
+
+```
+
 
 ## Chapters and sub-chapters
 

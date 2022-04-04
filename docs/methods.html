@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Methods | An Incomplete Accounting of my Master’s Thesis Research Thus Far</title>
+  <meta name="description" content="I don’t know what I’m doing ¯_(ツ)_/¯" />
+  <meta name="generator" content="bookdown 0.25 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 Methods | An Incomplete Accounting of my Master’s Thesis Research Thus Far" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="I don’t know what I’m doing ¯_(ツ)_/¯" />
+  <meta name="github-repo" content="quinn-miller/cpf_research" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Methods | An Incomplete Accounting of my Master’s Thesis Research Thus Far" />
+  
+  <meta name="twitter:description" content="I don’t know what I’m doing ¯_(ツ)_/¯" />
+  
+
+<meta name="author" content="Quinn Miller" />
+
+
+<meta name="date" content="2022-03-30" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="data-processing.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> url: your book url like <span>https://bookdown.org/yihui/bookdown</span><span></span></a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#usage"><i class="fa fa-check"></i><b>1.1</b> Usage<span></span></a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#render-book"><i class="fa fa-check"></i><b>1.2</b> Render book<span></span></a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#preview-book"><i class="fa fa-check"></i><b>1.3</b> Preview book<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>2</b> Methods<span></span></a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="methods.html"><a href="methods.html#site-description"><i class="fa fa-check"></i><b>2.1</b> Site Description<span></span></a>
+<ul>
+<li><a href="methods.html#an-unnumbered-section">An unnumbered section<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="data-processing.html"><a href="data-processing.html"><i class="fa fa-check"></i><b>3</b> Data Processing<span></span></a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="data-processing.html"><a href="data-processing.html#chapters-and-sub-chapters"><i class="fa fa-check"></i><b>3.1</b> Chapters and sub-chapters<span></span></a></li>
+<li class="chapter" data-level="3.2" data-path="data-processing.html"><a href="data-processing.html#captioned-figures-and-tables"><i class="fa fa-check"></i><b>3.2</b> Captioned figures and tables<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="comparison-of-salt-dilution-to-usgs-gage.html"><a href="comparison-of-salt-dilution-to-usgs-gage.html"><i class="fa fa-check"></i><b>4</b> Comparison of Salt Dilution to USGS Gage<span></span></a></li>
+<li class="chapter" data-level="5" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html"><i class="fa fa-check"></i><b>5</b> Footnotes and citations<span></span></a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html#footnotes"><i class="fa fa-check"></i><b>5.1</b> Footnotes<span></span></a></li>
+<li class="chapter" data-level="5.2" data-path="footnotes-and-citations.html"><a href="footnotes-and-citations.html#citations"><i class="fa fa-check"></i><b>5.2</b> Citations<span></span></a></li>
+</ul></li>
+<li><a href="references.html#references">References<span></span></a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">An Incomplete Accounting of my Master’s Thesis Research Thus Far</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="methods" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Methods<a href="methods.html#methods" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In each of our study watersheds we collected precipitation data using a tipping bucket rain gauge and continuous stream depth using either a capacitance rod or pressure transducer. We also measured stream discharge monthly from April to November 2021. When measuring discharge, we recorded stream stage manually in order to calibrate the sensor data (Fig. <a href="methods.html#fig:pics">2.1</a>)</p>
+<div class="figure"><span style="display:block;" id="fig:pics"></span>
+<img src="photos/bl4_bridge.jpg" alt="Left: Blue Lake 4 (a tributary to Blue Lake) in June 2021. Right: Staff plate for manual stream stage measurement" width="50%" /><img src="photos/bl4_sp.jpg" alt="Left: Blue Lake 4 (a tributary to Blue Lake) in June 2021. Right: Staff plate for manual stream stage measurement" width="50%" />
+<p class="caption">
+Figure 2.1: Left: Blue Lake 4 (a tributary to Blue Lake) in June 2021. Right: Staff plate for manual stream stage measurement
+</p>
+</div>
+<div id="site-description" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Site Description<a href="methods.html#site-description" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>For this class report, I will consider two of my field sites– Blue Lake 4 and Michigan Ditch (Table <a href="methods.html#tab:descr-tab">2.1</a>). In chapter 4, I will compare our data collection at the Michigan Ditch tributary to the data collected at the nearby USGS Michigan River gage.</p>
+<table>
+<caption>
+<span id="tab:descr-tab">Table 2.1: </span>Properties of the watersheds in this study
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Watershed
+</th>
+<th style="text-align:center;">
+Slope
+</th>
+<th style="text-align:center;">
+Aspect
+</th>
+<th style="text-align:center;">
+Elevation (m)
+</th>
+<th style="text-align:center;">
+Area (sq.km)
+</th>
+<th style="text-align:center;">
+Snow Zone
+</th>
+<th style="text-align:center;">
+Burn Status
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+Bighorn
+</td>
+<td style="text-align:center;">
+19
+</td>
+<td style="text-align:center;">
+SE
+</td>
+<td style="text-align:center;">
+2987.988
+</td>
+<td style="text-align:center;">
+3.396600
+</td>
+<td style="text-align:center;">
+intermittent
+</td>
+<td style="text-align:center;">
+unburned
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Washout
+</td>
+<td style="text-align:center;">
+33
+</td>
+<td style="text-align:center;">
+E/SE
+</td>
+<td style="text-align:center;">
+2455.392
+</td>
+<td style="text-align:center;">
+2.695772
+</td>
+<td style="text-align:center;">
+intermittent
+</td>
+<td style="text-align:center;">
+partially burned
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Dry
+</td>
+<td style="text-align:center;">
+18
+</td>
+<td style="text-align:center;">
+E/SE
+</td>
+<td style="text-align:center;">
+2753.429
+</td>
+<td style="text-align:center;">
+2.520000
+</td>
+<td style="text-align:center;">
+intermittent
+</td>
+<td style="text-align:center;">
+severely burned
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Michigan Ditch
+</td>
+<td style="text-align:center;">
+19
+</td>
+<td style="text-align:center;">
+W/SW
+</td>
+<td style="text-align:center;">
+3462.576
+</td>
+<td style="text-align:center;">
+1.359900
+</td>
+<td style="text-align:center;">
+persistent
+</td>
+<td style="text-align:center;">
+unburned
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Montgomery
+</td>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:center;">
+E/SE
+</td>
+<td style="text-align:center;">
+3070.066
+</td>
+<td style="text-align:center;">
+1.887741
+</td>
+<td style="text-align:center;">
+persistent
+</td>
+<td style="text-align:center;">
+partially burned
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Blue Lake 4
+</td>
+<td style="text-align:center;">
+13
+</td>
+<td style="text-align:center;">
+E/NE
+</td>
+<td style="text-align:center;">
+3065.140
+</td>
+<td style="text-align:center;">
+0.999655
+</td>
+<td style="text-align:center;">
+persistent
+</td>
+<td style="text-align:center;">
+severely burned
+</td>
+</tr>
+</tbody>
+</table>
+<div id="an-unnumbered-section" class="section level3 unnumbered hasAnchor">
+<h3>An unnumbered section<a href="methods.html#an-unnumbered-section" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Chapters and sections are numbered by default. To un-number a heading, add a <code>{.unnumbered}</code> or the shorter <code>{-}</code> at the end of the heading, like in this section.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="data-processing.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/01-site-description.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
