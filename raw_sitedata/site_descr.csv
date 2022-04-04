@@ -1,0 +1,7 @@
+﻿Watershed,Slope,Aspect,Elevation (m),Area (sq.km),Snow Zone,Burn Status
+Bighorn,19,SE,2987.987764,3.3966,intermittent,unburned
+Washout,33,E/SE,2455.392,2.695772,intermittent,partially burned
+Dry,18,E/SE,2753.429335,2.52,intermittent,severely burned
+Michigan Ditch,19,W/SW,3462.575936,1.3599,persistent,unburned
+Montgomery,8,E/SE,3070.065674,1.887741,persistent,partially burned
+Blue Lake 4,13,E/NE,3065.139648,0.999655,persistent,severely burned

@@ -23,3 +23,16 @@ sharing-your-book
 publishing
 pages
 metadata-for-sharing
+url-your-book-url-like-httpsbookdown.orgyihuibookdown
+methods
+site-description
+data-processing
+comparison-of-salt-dilution-to-usgs-gage
+tab:unnamed-chunk-1
+tab:unnamed-chunk-4
+fig:pics
+tab:descr-tab
+precipitation
+stream-stage
+discharge
+fig:michigan
