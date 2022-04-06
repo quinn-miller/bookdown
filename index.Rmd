@@ -11,46 +11,14 @@ description: |
   I don't know what I'm doing  ¯\_(ツ)_/¯
 link-citations: yes
 github-repo: quinn-miller/cpf_research
+
 ---
 
 # About
 
 The western United States is seeing an increase in catastrophic wildfire in virtually all climate types and across a broad range of elevations. Many of these fires burn in forested headwaters that communities rely on for water supply, underscoring the need for a greater understanding of how fire changes streamflow timing and magnitude. Though many studies have examined the hydrologic response to fire, the site-specific nature of this type of research has made it difficult to generalize findings. The 2020 Cameron Peak fire in Colorado burned across a broad elevation gradient, making it an ideal case study for examining how the post-fire impact to streamflow generation varies with temperature, aridity, and seasonal snow cover. 
 
-We selected three watersheds—unburned, partially burned, and severely burned—in each of two snow zones: the high-elevation persistent snow zone, and the mid-elevation intermittent snow zone. These watersheds were instrumented to monitor snow accumulation and ablation, rainfall, and stream discharge throughout water year 2021. We compared streamflow responses to rainfall and snowmelt between watersheds to evaluate how burning affected runoff. At high elevations, snowmelt runoff began earlier in the burned watersheds, which experienced greater total flow and lower base flows compared to the unburned watershed. The results were similar for the low elevation sites, though less pronounced for snowmelt runoff. At all elevations, streamflow at the burned sites was more responsive to rainfall, with the low elevation sites exhibiting a much more rapid rise to peak discharge than the high elevation sites. The results demonstrate that the streamflow responses to fire vary between snow zones, indicating a need to account for elevation and snow persistence in post-fire risk assessments.
-
-
-## Usage 
-
-Each **bookdown** chapter is an .Rmd file, and each .Rmd file can contain one (and only one) chapter. A chapter *must* start with a first-level heading: `# A good chapter`, and can contain one (and only one) first-level heading.
-
-Use second-level and higher headings within chapters like: `## A short section` or `### An even shorter section`.
-
-The `index.Rmd` file is required, and is also your first book chapter. It will be the homepage when you render the book.
-
-## Render book
-
-You can render the HTML version of this example book without changing anything:
-
-1. Find the **Build** pane in the RStudio IDE, and
-
-1. Click on **Build Book**, then select your output format, or select "All formats" if you'd like to use multiple formats from the same book source files.
-
-Or build the book from the R console:
-
-```{r, eval=FALSE}
-bookdown::render_book()
-```
-
-To render this example to PDF as a `bookdown::pdf_book`, you'll need to install XeLaTeX. You are recommended to install TinyTeX (which includes XeLaTeX): <https://yihui.org/tinytex/>.
-
-## Preview book
-
-As you work, you may start a local server to live preview this HTML book. This preview will update as you edit the book when you save individual .Rmd files. You can start the server in a work session by using the RStudio add-in "Preview book", or from the R console:
-
-```{r eval=FALSE}
-bookdown::serve_book()
-```
+We selected three watersheds—unburned, partially burned, and severely burned—in each of two snow zones: the high-elevation persistent snow zone, and the mid-elevation intermittent snow zone. These watersheds were instrumented to monitor snow accumulation and ablation, rainfall, and stream stage throughout water year 2021. We compared streamflow responses to rainfall and snowmelt between watersheds to evaluate how burning affected runoff. At high elevations, snowmelt runoff began earlier in the burned watersheds, which experienced greater total flow and lower base flows compared to the unburned watershed. The results were similar for the low elevation sites, though less pronounced for snowmelt runoff. At all elevations, streamflow at the burned sites was more responsive to rainfall, with the low elevation sites exhibiting a much more rapid rise to peak discharge than the high elevation sites. The results demonstrate that the streamflow responses to fire vary between snow zones, indicating a need to account for elevation and snow persistence in post-fire risk assessments.
 
 
 ```{r include=FALSE}

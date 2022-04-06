@@ -45,6 +45,8 @@ bl4_storm <- rain_format(bl4_rain)
 
 ## Stream Stage 
 
+### Michigan Ditch {-}
+
 Michigan Ditch stream stage was recorded by a pressure transducer that doesn't take into account atmospheric pressure, so the data needs to be corrected using barometic data. The continuous stage data is then calibrated according to the manual stage measurements.
 
 ```{r michigan, warning=F, fig.cap='Michigan Ditch stream stage. The red dots indicate manual stage measurements.', out.width='80%', fig.asp=.75, fig.align='center'}
@@ -100,41 +102,92 @@ ggplotly(michiganditch)
 ```
 
 
+### Blue Lake 4 {-}
+
+The Blue Lake data was collected with a capacitance rod, so doesn't need to be corrected for atmospheric pressure.
+
+```{r bl4, warning=F, fig.cap='Bl4 stream stage. The red dots indicate manual stage measurements.', out.width='80%', fig.asp=.75, fig.align='center'}
+
+#read in file with manual stage measurements
+discharge_bl4=read_csv('raw_sitedata/bl4/discharge_bl4.csv', show_col_types = FALSE)
+discharge_bl4$DateTime = as.POSIXct(discharge_bl4$datetime,tzone="US/Mountain",format="%m/%d/%Y %H")
+discharge_bl4[1:2,10] = as.POSIXct('2021-06-01 15:30:00')
+
+#read in sensor stage data and format
+bl4_stage=read_csv('raw_sitedata/bl4/bl4_stage_composite.csv', show_col_types = FALSE)
+bl4_stage$Date = as_date(bl4_stage$datetime, format="%m/%d/%Y %H:%M")
+bl4_stage$DateTime = round_date(as_datetime(bl4_stage$datetime, format="%m/%d/%Y %H:%M"), unit = "15 mins")
+bl4_stage$DateTime = force_tz(bl4_stage$DateTime, tzone = "US/Mountain" )
+bl4_stage <-rename(bl4_stage, Stage_mm = wtrhgt__3)
+bl4_stage <- bl4_stage[, -c(2:3)]
+
+#convert stage from sensor units to cm
+bl4_stage$Stage_cm=bl4_stage$Stage_mm/10
+
+#merge the manual discharge measurements with the sensor time series
+bl4_stage=full_join(bl4_stage,discharge_bl4,by='DateTime')
+
+#delete bad measurements-- sensor spikes and other obvious errors
+bl4_stage<-filter(bl4_stage, datetime.x != "8/6/2021 8:45")
+bl4_stage<-filter(bl4_stage, datetime.x != "6/1/2021 10:33")
+bl4_stage<-filter(bl4_stage, datetime.x != "6/1/2021 11:33")
+bl4_stage<-filter(bl4_stage, datetime.x != "6/1/2021 12:33")
+bl4_stage<-filter(bl4_stage, datetime.x != "6/1/2021 13:33")
+
+#goal is to offset-adjust sensor stage to levels of manual stage
+bl4_stage$Stage_corr_cm = bl4_stage$Stage_cm
+bl4_stage$Stage_corr_cm = ifelse(bl4_stage$DateTime < '2021-06-01 14:30:00',
+                                        bl4_stage$Stage_corr_cm +6, bl4_stage$Stage_corr_cm+2)
+
+bl4_stage$Stage_corr_cm = ifelse(bl4_stage$DateTime > '2021-06-11 12:30:00',
+                                         bl4_stage$Stage_corr_cm +4.4, bl4_stage$Stage_corr_cm)
+
+bl4_stage$Stage_corr_cm = ifelse(bl4_stage$DateTime > '2021-07-02 13:45:00',
+                                        bl4_stage$Stage_corr_cm +0.2, bl4_stage$Stage_corr_cm)
+
+bl4_stage$Stage_corr_cm = ifelse(bl4_stage$DateTime > '2021-08-06 08:30:00',
+                                 bl4_stage$Stage_corr_cm +0.5, bl4_stage$Stage_corr_cm)
+
+
+#plot the sensor and manual stage time series
+bl4=ggplot()+geom_line(data=bl4_stage,aes(x=DateTime,y=Stage_corr_cm))+
+  geom_point(data=bl4_stage,aes(x=DateTime,y=manual_stage_cm),color='red')+
+  labs(x= "Time", y= "Stage (cm)") +
+  theme_bw()
+ggplotly(bl4)
+
+```
+
+
 ## Discharge
 
+Rating curves were developed for both sites using JMP statistical software.
 
-```{r}
+```{r rc, fig.cap="Plots of discharge; Michigan Ditch on the left and Blue Lake 4 on the right.", fig.show="hold", out.width="50%"}
+
+#michigan ditch rc is a sqrt transform of the y axis
+michditch_stage$Discharge_Ls = (-0.218979 + 0.3533779*(michditch_stage$stage_corr_cm))^2
+  
+#plot sensor discharge and manual discharge to make sure rating curve was applied correctly
+michiganditch=ggplot(michditch_stage)+
+  geom_line(aes(x=DateTime,y=Discharge_Ls))+
+  geom_point(aes(x=DateTime,y=discharge_Ls),color='red')
+
+#bl4 rc is a gompertz 3p sigmoid curve
+a=159.07732
+b=0.0997502
+c=23.905566
+
+bl4_stage$Discharge_Ls = a*exp(-exp(-b*(bl4_stage$Stage_corr_cm - c)))
+
+#plot sensor discharge and manual discharge to make sure rating curve was applied correctly
+bl4=ggplot()+geom_line(data=bl4_stage,aes(x=DateTime,y=Discharge_Ls))+
+  geom_point(data=bl4_stage,aes(x=DateTime,y=discharge_Ls),color='red')+
+  xlab("Time")+ ylab("Discharge (L/s)")+
+  theme_bw()
+
+ggplotly(michiganditch)
+ggplotly(bl4)
 
 ```
 
-
-## Chapters and sub-chapters
-
-There are two steps to cross-reference any heading:
-
-1. Label the heading: `# Hello world {#nice-label}`. 
-    - Leave the label off if you like the automated heading generated based on your heading title: for example, `# Hello world` = `# Hello world {#hello-world}`.
-    - To label an un-numbered heading, use: `# Hello world {-#nice-label}` or `{# Hello world .unnumbered}`.
-
-1. Next, reference the labeled heading anywhere in the text using `\@ref(nice-label)`; for example, please see Chapter \@ref(cross). 
-    - If you prefer text as the link instead of a numbered reference use: [any text you want can go here](#cross).
-
-## Captioned figures and tables
-
-Figures and tables *with captions* can also be cross-referenced from elsewhere in your book using `\@ref(fig:chunk-label)` and `\@ref(tab:chunk-label)`, respectively.
-
-See Figure \@ref(fig:nice-fig).
-
-```{r nice-fig, fig.cap='Here is a nice figure!', out.width='80%', fig.asp=.75, fig.align='center', fig.alt='Plot with connected points showing that vapor pressure of mercury increases exponentially as temperature increases.'}
-par(mar = c(4, 4, .1, .1))
-plot(pressure, type = 'b', pch = 19)
-```
-
-Don't miss Table \@ref(tab:nice-tab).
-
-```{r nice-tab, tidy=FALSE}
-knitr::kable(
-  head(pressure, 10), caption = 'Here is a nice table!',
-  booktabs = TRUE
-)
-```
