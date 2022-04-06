@@ -14,6 +14,7 @@ library(lubridate)
 library(plotly)
 library(kableExtra)
 library(ggthemes)
+library(gridExtra)
 ```
 
 ``` {r, show_col_types = FALSE}
@@ -161,9 +162,9 @@ ggplotly(bl4)
 
 ## Discharge
 
-Rating curves were developed for both sites using JMP statistical software.
+Rating curves were developed for both sites using JMP statistical software, and then used to calculate continuous discharge.
 
-```{r rc, fig.cap="Plots of discharge; Michigan Ditch on the left and Blue Lake 4 on the right.", fig.show="hold", out.width="50%"}
+```{r}
 
 #michigan ditch rc is a sqrt transform of the y axis
 michditch_stage$Discharge_Ls = (-0.218979 + 0.3533779*(michditch_stage$stage_corr_cm))^2
@@ -171,7 +172,9 @@ michditch_stage$Discharge_Ls = (-0.218979 + 0.3533779*(michditch_stage$stage_cor
 #plot sensor discharge and manual discharge to make sure rating curve was applied correctly
 michiganditch=ggplot(michditch_stage)+
   geom_line(aes(x=DateTime,y=Discharge_Ls))+
-  geom_point(aes(x=DateTime,y=discharge_Ls),color='red')
+  geom_point(aes(x=DateTime,y=discharge_Ls),color='red')+
+  xlab("Time")+ ylab("Discharge (L/s)")+
+  theme_bw()
 
 #bl4 rc is a gompertz 3p sigmoid curve
 a=159.07732
@@ -185,9 +188,11 @@ bl4=ggplot()+geom_line(data=bl4_stage,aes(x=DateTime,y=Discharge_Ls))+
   geom_point(data=bl4_stage,aes(x=DateTime,y=discharge_Ls),color='red')+
   xlab("Time")+ ylab("Discharge (L/s)")+
   theme_bw()
+```
 
-ggplotly(michiganditch)
-ggplotly(bl4)
+```{r rc, echo=FALSE, warning=FALSE, fig.cap="Plots of discharge; Michigan Ditch on the left and Blue Lake 4 on the right. The red dots indicate manual discharge measurements."}
+
+grid.arrange(michiganditch, bl4, ncol=2)
 
 ```
 
