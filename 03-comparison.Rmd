@@ -1,12 +1,97 @@
-# Comparison of Salt Dilution to USGS Gage
+# Methods Check
 
-You can add parts to organize one or more book chapters together. Parts can be inserted at the top of an .Rmd file, before the first-level chapter heading in that same file. 
+Salt dilution gaging [@kilpatrick1985] was used to measure discharge at both sites. Upon first review of the data, my advisor [Stephanie Kampf](https://www.nrel.colostate.edu/investigator/stephanie-kampf-homepage/) pointed out that the peak discharge at Michigan Ditch (Fig. \@ref(fig:rc)) appeared low to her well-trained eye. Fortunately, Michigan Ditch is a tributary to the larger Michigan River, which is gaged by the USGS in the vicinity of my study area. Comparing the two sets of flow data might help me assess the accuracy of my methods.
 
-Add a numbered part: `# (PART) Act one {-}` (followed by `# A chapter`)
+## Data Retrieval
 
-Add an unnumbered part: `# (PART\*) Act one {-}` (followed by `# A chapter`)
+The`dataRetrieval` package allows R users to easily retrieve hydrologic data from the USGS, EPA, and USDA. We are interested in the USGS data, which is managed by the [National Water Information System (NWIS)](https://waterdata.usgs.gov/nwis).
 
-Add an appendix as a special kind of un-numbered part: `# (APPENDIX) Other stuff {-}` (followed by `# A chapter`). Chapters in an appendix are prepended with letters instead of numbers.
+```{r, include=FALSE}
+library(tidyverse)
+library(lubridate)
+library(plotly)
+library(ggthemes)
+library(gridExtra)
+library(dataRetrieval)
+library(kableExtra)
+```
 
+```{r}
+#read in gage data from USGS gage 06614800: Michigan River near Cameron Pass, CO
+siteNo <- "06614800"
+#the parameter code "00060" retrieves discharge data 
+pCode <- "00060"
+start.date <- "2021-01-10"
+end.date <- "2021-10-18"
 
+#readNWISuv() imports data from https://waterservices.usgs.gov/
+michigan <- readNWISuv(siteNumbers = siteNo,
+                     parameterCd = pCode,
+                     startDate = start.date,
+                     endDate = end.date)
 
+#let's look at the gage data we retrieved:
+michigan %>%
+    kable(.,'html',caption='Michigan Gage Information') %>%
+    kable_styling() %>%
+    scroll_box(width='900px',height='400px')
+```
+
+As you can see, the data is labeled with parameter codes that aren't very descriptive. Fortunately, the column names can be shortened and simplified using the `renameNWISColumns` function, which retrieves site and parameter information from the metadata. I also need to convert the discharge from ft^3^/s to L/s in order to compare it to the Michigan Ditch discharge.
+
+```{r}
+#rename columns
+michigan <- renameNWISColumns(michigan)
+
+#format datetime
+michigan$DateTime <- ymd_hms(michigan$dateTime,tz="GMT")
+
+#convert discharge to L/s and drop all unecessary data from the data frame
+michigan <- michigan %>%
+  mutate(Discharge_Ls = Flow_Inst*28.316847) %>%
+  select(7,8)
+
+#how do the data look now?
+michigan %>%
+    kable(.,'html',caption='Michigan Gage Information') %>%
+    kable_styling() %>%
+    scroll_box(width='450px',height='400px')
+```
+
+## Comparison
+
+Now that the USGS data is properly formatted, it can be compared to Michigan Ditch (Fig. \@ref(fig:compare)).
+
+```{r compare, warning=F, fig.cap='Comparing flow on the Michigan River to its tributary Michigan Ditch.', out.width='80%', fig.asp=.75, fig.align='center'}
+#compare michigan ditch to michigan river discharge
+michditch_stage= read_csv('raw_sitedata/michiganditch/michiganditch_stage.csv', show_col_types = FALSE)
+
+compare = ggplot()+
+  geom_line(data = michditch_stage, aes(x=DateTime, y = Discharge_Ls, color = "Michigan Ditch"))+
+  geom_line(data = michigan, aes(x= DateTime, y = Discharge_Ls, color = 'Michigan'))+
+  xlab("Time")+ ylab("Discharge (L/s)")+
+  theme_bw()
+
+ggplotly(compare)
+```
+
+Michigan River has much higher peak and base flows than Michigan Ditch. Before I can make a decision as to whether or not the salt-dilution method was flawed for Michigan Ditch, I need to take into account for the difference in watershed size-- the USGS gage on Michigan river drains a larger area.
+
+```{r compare2, warning=F, fig.cap='Comparing area normalized discharge between Michigan River and Michigan Ditch.', out.width='80%', fig.asp=.75, fig.align='center'}
+#compare michigan ditch to michigan river area-normalized discharge
+md_A=1.3599
+michditch_stage$Q_mm=michditch_stage$Discharge_Ls*86400*0.001/md_A/1000
+
+m_A = 4.0284
+michigan$Q_mm = michigan$Discharge_Ls*86400*0.001/m_A/1000 
+
+compare = ggplot()+
+  geom_line(data = michditch_stage, aes(x=DateTime, y = Q_mm, color = "Michigan Ditch"))+
+  geom_line(data = michigan, aes(x= DateTime, y = Q_mm, color = 'Michigan'))+
+  xlab("Time")+ ylab("Discharge (mm)")+
+  theme_bw()
+
+ggplotly(compare)
+```
+
+Interesting-- figure \@ref(fig:compare2) shows that the base flows are now comparable, but Michigan river still has much higher peak flow. This may indicate that the salt-dilution method didn't capture high flows at Michigan Ditch very well.

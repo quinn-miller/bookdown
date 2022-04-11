@@ -8,11 +8,9 @@ The goal is to compare  rainfall and discharge data in order to compute the foll
 Before starting this analysis, I identified discrete rainfall events from the tipping bucket rain gauge output using the USDA Rainfall Intensity Summarization Tool (RIST; [@ARS2013]). RIST calculated the following metrics for each event: storm duration (hrs), rain depth (mm); maximum intensity (mm h^−1^) over 5-, 15-, 30-, and 60-min intervals; and erosivity. Because the stage data is recorded every 15 minutes, I'm using the start time of the maximum intensity 15 minute interval as the storm start time. The function below formats the RIST output into the form I want.
 
 ```{r, include=FALSE}
-library(EcoHydRology)
 library(tidyverse)
 library(lubridate)
 library(plotly)
-library(kableExtra)
 library(ggthemes)
 library(gridExtra)
 ```
@@ -111,44 +109,51 @@ The Blue Lake data was collected with a capacitance rod, so doesn't need to be c
 
 #read in file with manual stage measurements
 discharge_bl4=read_csv('raw_sitedata/bl4/discharge_bl4.csv', show_col_types = FALSE)
-discharge_bl4$DateTime = as.POSIXct(discharge_bl4$datetime,tzone="US/Mountain",format="%m/%d/%Y %H")
-discharge_bl4[1:2,10] = as.POSIXct('2021-06-01 15:30:00')
+discharge_bl4$DateTime = as_datetime(discharge_bl4$datetime,tz="GMT",format="%m/%d/%Y %H:%M")
 
-#read in sensor stage data and format
-bl4_stage=read_csv('raw_sitedata/bl4/bl4_stage_composite.csv', show_col_types = FALSE)
-bl4_stage$Date = as_date(bl4_stage$datetime, format="%m/%d/%Y %H:%M")
+#read in sensor stage data
+bl4_stage=read_csv('raw_sitedata/bl4/bl4_stage_composite.csv', show_col_types = FALSE) %>%
+  rename(Stage_mm = wtrhgt__3) %>%
+  select(-c(2:3))
+
 bl4_stage$DateTime = round_date(as_datetime(bl4_stage$datetime, format="%m/%d/%Y %H:%M"), unit = "15 mins")
-bl4_stage$DateTime = force_tz(bl4_stage$DateTime, tzone = "US/Mountain" )
-bl4_stage <-rename(bl4_stage, Stage_mm = wtrhgt__3)
-bl4_stage <- bl4_stage[, -c(2:3)]
 
 #convert stage from sensor units to cm
 bl4_stage$Stage_cm=bl4_stage$Stage_mm/10
 
 #merge the manual discharge measurements with the sensor time series
-bl4_stage=full_join(bl4_stage,discharge_bl4,by='DateTime')
-
-#delete bad measurements-- sensor spikes and other obvious errors
-bl4_stage<-filter(bl4_stage, datetime.x != "8/6/2021 8:45")
-bl4_stage<-filter(bl4_stage, datetime.x != "6/1/2021 10:33")
-bl4_stage<-filter(bl4_stage, datetime.x != "6/1/2021 11:33")
-bl4_stage<-filter(bl4_stage, datetime.x != "6/1/2021 12:33")
-bl4_stage<-filter(bl4_stage, datetime.x != "6/1/2021 13:33")
+bl4_stage=full_join(bl4_stage,discharge_bl4,by='DateTime')%>%
+  select(3,4,9,11)
 
 #goal is to offset-adjust sensor stage to levels of manual stage
-bl4_stage$Stage_corr_cm = bl4_stage$Stage_cm
-bl4_stage$Stage_corr_cm = ifelse(bl4_stage$DateTime < '2021-06-01 14:30:00',
-                                        bl4_stage$Stage_corr_cm +6, bl4_stage$Stage_corr_cm+2)
+#bed is ~4.5 cm below sensor
+bl4_stage$Stage_corr_cm = bl4_stage$Stage_cm+4.5
 
-bl4_stage$Stage_corr_cm = ifelse(bl4_stage$DateTime > '2021-06-11 12:30:00',
-                                         bl4_stage$Stage_corr_cm +4.4, bl4_stage$Stage_corr_cm)
+#offset adjust for download
+bl4_stage$Stage_corr_cm = ifelse(bl4_stage$DateTime > ymd_hms('2021-06-01 15:30:00'),
+                                        bl4_stage$Stage_corr_cm -1.5, bl4_stage$Stage_corr_cm)
 
-bl4_stage$Stage_corr_cm = ifelse(bl4_stage$DateTime > '2021-07-02 13:45:00',
-                                        bl4_stage$Stage_corr_cm +0.2, bl4_stage$Stage_corr_cm)
+#offset adjust for download
+bl4_stage$Stage_corr_cm = ifelse(bl4_stage$DateTime > ymd_hms('2021-06-11 12:30:00'),
+                                         bl4_stage$Stage_corr_cm +3.5, bl4_stage$Stage_corr_cm)
 
-bl4_stage$Stage_corr_cm = ifelse(bl4_stage$DateTime > '2021-08-06 08:30:00',
+#offset adjust for download
+bl4_stage$Stage_corr_cm = ifelse(bl4_stage$DateTime > ymd_hms('2021-08-06 08:30:00'),
                                  bl4_stage$Stage_corr_cm +0.5, bl4_stage$Stage_corr_cm)
 
+bl4_stage$Stage_corr_cm = ifelse(bl4_stage$DateTime == ymd_hms('2021-08-06 08:45:00'),
+                                 NA, bl4_stage$Stage_corr_cm)
+
+#offset adjust for download
+bl4_stage$Stage_corr_cm = ifelse(bl4_stage$DateTime > ymd_hms('2021-08-27 09:00:00'),
+                                 bl4_stage$Stage_corr_cm -0.2, bl4_stage$Stage_corr_cm)
+
+#delete sensor spikes
+bl4_stage <- bl4_stage %>%
+  filter(!(DateTime > ymd_hms("2021-05-31 13:30:00") & DateTime <= ymd_hms("2021-05-31 19:30:00"))) %>%
+  filter(!(DateTime > ymd_hms("2021-06-01 08:30:00") & DateTime < ymd_hms("2021-06-01 14:30:00"))) %>%
+  filter(!(DateTime == ymd_hms("2021-05-29 13:30:00"))) %>%
+  filter(!(DateTime == ymd_hms("2021-05-29 15:30:00")))
 
 #plot the sensor and manual stage time series
 bl4=ggplot()+geom_line(data=bl4_stage,aes(x=DateTime,y=Stage_corr_cm))+
@@ -188,6 +193,10 @@ bl4=ggplot()+geom_line(data=bl4_stage,aes(x=DateTime,y=Discharge_Ls))+
   geom_point(data=bl4_stage,aes(x=DateTime,y=discharge_Ls),color='red')+
   xlab("Time")+ ylab("Discharge (L/s)")+
   theme_bw()
+
+#export
+write_csv(michditch_stage,'raw_sitedata/michiganditch/michiganditch_stage.csv')
+write_csv(bl4_stage,'raw_sitedata/bl4/bl4_stage.csv')
 ```
 
 ```{r rc, echo=FALSE, warning=FALSE, fig.cap="Plots of discharge; Michigan Ditch on the left and Blue Lake 4 on the right. The red dots indicate manual discharge measurements."}

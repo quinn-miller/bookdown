@@ -3,6 +3,10 @@ tab:descr-tab
 fig:michigan
 fig:bl4
 fig:rc
+tab:unnamed-chunk-6
+tab:unnamed-chunk-7
+fig:compare
+fig:compare2
 about
 methods
 site-description
@@ -10,7 +14,9 @@ data-processing
 precipitation
 stream-stage
 discharge
-comparison-of-salt-dilution-to-usgs-gage
+methods-check
+data-retrieval
+comparison
 footnotes-and-citations
 footnotes
 citations
