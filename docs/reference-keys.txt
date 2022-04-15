@@ -17,6 +17,3 @@ discharge
 methods-check
 data-retrieval
 comparison
-footnotes-and-citations
-footnotes
-citations
